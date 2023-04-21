@@ -1,28 +1,66 @@
-import React from 'react';
-import {Container, Button, Text, VStack, Heading, Box} from 'native-base';
+import React, {useState} from 'react';
+import {
+  Container,
+  Button,
+  Text,
+  VStack,
+  Heading,
+  Box,
+  ScrollView,
+} from 'native-base';
 import {StackNavigationProp} from '@react-navigation/stack';
 import FloatingLabelInput from '../components/FloatingLabelInput';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import BASE_URL from '../network';
 
 type LoginProps = {
   navigation: StackNavigationProp<any, any>;
 };
 
 const Login = ({navigation}: LoginProps) => {
-  const [personalId, setPersonalId] = React.useState('');
+  const [studentId, setStudentId] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/login`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({studentId, password}),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        await AsyncStorage.setItem('user', JSON.stringify(data));
+        navigation.reset({index: 0, routes: [{name: 'MainNavigator'}]});
+      } else {
+        setErrorMessage(data);
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+
     // Handle login logic
     // If login is successful, navigate to the MainNavigator screen
-    navigation.navigate('MainNavigator');
   };
 
   return (
-    <Box w="full" h="full" bgColor="white">
+    <ScrollView
+      minW="full"
+      minH="full"
+      bgColor="white"
+      showsVerticalScrollIndicator={false}
+      automaticallyAdjustKeyboardInsets={true}
+      keyboardShouldPersistTaps="never">
       <Container
         safeAreaY
         w="full"
-        h="full"
+        minH="full"
         alignItems="center"
         alignSelf="center">
         <VStack
@@ -40,8 +78,23 @@ const Login = ({navigation}: LoginProps) => {
           </Heading>
 
           <VStack w="100%" space={5}>
-            <FloatingLabelInput label={'Personal ID'} />
-            <FloatingLabelInput label={'Password'} secureTextEntry />
+            <FloatingLabelInput
+              label={'Personal ID'}
+              onChangeText={text => {
+                setStudentId(text);
+              }}
+            />
+            <FloatingLabelInput
+              label={'Password'}
+              secureTextEntry
+              onChangeText={text => {
+                setPassword(text);
+              }}
+            />
+
+            {errorMessage.length > 0 && (
+              <Text color="red.500">{errorMessage}</Text>
+            )}
 
             <Box p={30} bgColor="gray.100" borderRadius="10px">
               <Text color="trueGray.600">
@@ -53,6 +106,7 @@ const Login = ({navigation}: LoginProps) => {
         </VStack>
 
         <Button
+          isLoading={isLoading}
           position="absolute"
           bottom={10}
           w="100%"
@@ -65,7 +119,7 @@ const Login = ({navigation}: LoginProps) => {
           Login to cabinet
         </Button>
       </Container>
-    </Box>
+    </ScrollView>
   );
 };
 

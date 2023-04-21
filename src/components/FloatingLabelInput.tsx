@@ -5,6 +5,7 @@ import {Animated} from 'react-native';
 interface FloatingLabelInputProps {
   label: string;
   secureTextEntry?: boolean;
+  onChangeText: (text: string) => void;
 }
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
@@ -13,6 +14,7 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 const FloatingLabelInput = ({
   label,
   secureTextEntry = false,
+  onChangeText,
 }: FloatingLabelInputProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [text, setText] = useState('');
@@ -78,6 +80,7 @@ const FloatingLabelInput = ({
         value={text}
         onChangeText={value => {
           setText(value);
+          onChangeText(value);
         }}
       />
     </VStack>

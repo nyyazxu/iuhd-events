@@ -1,17 +1,9 @@
-import React, {useEffect, useState} from 'react';
-import {
-  Container,
-  Button,
-  Text,
-  Box,
-  Heading,
-  VStack,
-  PresenceTransition,
-  Spinner,
-} from 'native-base';
+import React, {useLayoutEffect} from 'react';
+import {Container, Button, Text, Box, Heading, VStack} from 'native-base';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ImageBackground, StyleSheet} from 'react-native';
 import IUHD from '../svgs/IUHD';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type WelcomeProps = {
   navigation: StackNavigationProp<any, any>;
@@ -20,55 +12,18 @@ type WelcomeProps = {
 const Background = require('../../assets/images/welcome_background.png');
 
 const Welcome: React.FC<WelcomeProps> = ({navigation}) => {
-  const [splash, setSplash] = useState<boolean>(true);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSplash(false);
-    }, 1200);
-    () => {
-      if (timeout) {
-        clearTimeout(timeout);
+  useLayoutEffect(() => {
+    const checkUser = async () => {
+      const data = await AsyncStorage.getItem('user');
+      if (data) {
+        navigation.replace('MainNavigator');
       }
     };
-  }, []);
+    checkUser();
+  }, [navigation]);
 
   return (
     <>
-      {splash && (
-        <Box
-          position="absolute"
-          w="full"
-          top={0}
-          bottom={0}
-          left={0}
-          right={0}
-          zIndex={100}>
-          <PresenceTransition
-            visible={true}
-            initial={{
-              opacity: 1,
-            }}
-            animate={{
-              opacity: 0,
-              transition: {
-                duration: 200,
-                delay: 500,
-              },
-            }}>
-            <VStack
-              w="full"
-              h="full"
-              alignItems="center"
-              justifyContent="center"
-              bgColor="black"
-              space={8}>
-              <IUHD large />
-              <Spinner color="white" />
-            </VStack>
-          </PresenceTransition>
-        </Box>
-      )}
       <Box w="full" h="full">
         <ImageBackground
           source={Background}

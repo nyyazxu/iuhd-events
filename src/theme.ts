@@ -25,6 +25,13 @@ const Button = {
         elevation: 10,
       },
     },
+    outline: {
+      borderColor: 'primary.500',
+      _pressed: {
+        borderWidth: 3,
+        bgColor: 'transparent',
+      },
+    },
   },
   defaultProps: {
     variant: 'solid',
