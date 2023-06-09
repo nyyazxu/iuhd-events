@@ -38,7 +38,7 @@ const Home = ({navigation}: HomeProps) => {
   }, []);
 
   const onLayout = (event: any) => {
-    setSlideWidth(event.nativeEvent.layout.width);
+    setSlideWidth(event.nativeEvent.layout.width-50);
   };
 
   const openEvent = (event: any) => {
@@ -62,6 +62,8 @@ const Home = ({navigation}: HomeProps) => {
         </Box>
       ) : (
         <Container
+          maxW={'full'}
+          px={'25px'}
           onLayout={onLayout}
           w="full"
           h="full"
@@ -69,7 +71,7 @@ const Home = ({navigation}: HomeProps) => {
           alignSelf="center"
           pt={8}>
           <Heading mb={3} alignSelf="flex-start">
-            Upcoming Events
+            Major Events
           </Heading>
           <ImageSlider
             slideWidth={slideWidth}
@@ -89,8 +91,9 @@ const Home = ({navigation}: HomeProps) => {
             }}
             ItemSeparatorComponent={Seperator}
             keyExtractor={item => `${item}item`}
-            renderItem={({item}) => (
+            renderItem={({item,index}:any) => (
               <EventItem
+                key={`${item.title}${index}`}
                 event={item}
                 onPress={() => {
                   openEvent(item);

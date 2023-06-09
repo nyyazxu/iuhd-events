@@ -12,6 +12,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import FloatingLabelInput from '../components/FloatingLabelInput';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BASE_URL from '../network';
+import { Platform } from 'react-native';
 
 type LoginProps = {
   navigation: StackNavigationProp<any, any>;
@@ -50,25 +51,21 @@ const Login = ({navigation}: LoginProps) => {
   };
 
   return (
-    <ScrollView
+    <Box
       minW="full"
       minH="full"
-      bgColor="white"
-      showsVerticalScrollIndicator={false}
-      automaticallyAdjustKeyboardInsets={true}
-      keyboardShouldPersistTaps="never">
+      bgColor="white">
       <Container
         safeAreaY
         w="full"
-        minH="full"
+        h="full"
         alignItems="center"
         alignSelf="center">
         <VStack
           w="100%"
-          h="100%"
-          pt="50px"
+          pt={20}
           pb="200px"
-          justifyContent="space-around">
+          space={10}>
           <Heading
             fontSize={40}
             color="primary.500"
@@ -119,7 +116,7 @@ const Login = ({navigation}: LoginProps) => {
           Login to cabinet
         </Button>
       </Container>
-    </ScrollView>
+    </Box>
   );
 };
 

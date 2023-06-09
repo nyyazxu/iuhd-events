@@ -44,6 +44,7 @@ const ImageSlider = ({slideWidth, onPress, events}: any) => {
         ItemSeparatorComponent={Seperator}
         renderItem={({item, index}: any) => (
           <Pressable
+            key={`${item.title}${index}`}
             onPress={() => {
               onPress(item);
             }}>
@@ -73,8 +74,8 @@ const ImageSlider = ({slideWidth, onPress, events}: any) => {
                       },
                     }}>
                     <HStack ml={4} mt={3} alignItems="center" space={1}>
-                      <Clock color="black" />
-                      <Text>{formatDate(item.date)}</Text>
+                      <Clock color="#ffffff" />
+                      <Text color={"#ffffff"}>{formatDate(item.date)}</Text>
                     </HStack>
                     <Heading
                       position="absolute"

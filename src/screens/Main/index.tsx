@@ -16,7 +16,7 @@ const Main = () => {
     <Tab.Navigator tabBar={customTabBar}>
       <Tab.Screen
         options={{
-          title: 'Events',
+          title: 'Events'
         }}
         name="Home"
         component={Home}
